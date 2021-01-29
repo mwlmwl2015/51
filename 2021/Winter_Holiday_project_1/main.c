@@ -5,18 +5,18 @@ unsigned  int code num[]={'0','1','2','3','4','5','6','7','8','9','-','h','m','s
 unsigned int hour,minute,second;
 unsigned int hour2,minute2,second2;
 unsigned int hour3,minute3,second3;
-unsigned int k=1,l=1,m=0;//ºÜÆæ¹Ö£¬·ÅÕâ¾ÍĞĞÁË
+unsigned int k=1,l=1,m=0;//å¾ˆå¥‡æ€ªï¼Œæ”¾è¿™å°±è¡Œäº†
 
-unsigned int mode_flag=2;//Ä£Ê½¸üĞÂ±êÖ¾
+unsigned int mode_flag=2;//æ¨¡å¼æ›´æ–°æ ‡å¿—
 
-void LcdDisplay();//lcd1602ÏÔÊ¾
-int matrix_button();//4*4¾ØÕó°´¼ü
-void delayms(unsigned int ms);//ºÁÃëÑÓÊ±
-void buzzer();//·äÃùÆ÷Ïì
-void t01();//t0_t1¶¨Ê±Æ÷
-int date_process();//Êı¾İ´¦Àím¡¢s
-int date_process_hour();//Êı¾İ´¦Àíh
-void mode();//Ä£Ê½
+void LcdDisplay();//lcd1602æ˜¾ç¤º
+int matrix_button();//4*4çŸ©é˜µæŒ‰é”®
+void delayms(unsigned int ms);//æ¯«ç§’å»¶æ—¶
+void buzzer();//èœ‚é¸£å™¨å“
+void t01();//t0_t1å®šæ—¶å™¨
+int date_process();//æ•°æ®å¤„ç†mã€s
+int date_process_hour();//æ•°æ®å¤„ç†h
+void mode();//æ¨¡å¼
 	
 void main()
 {
@@ -51,7 +51,7 @@ void LcdDisplay()
 		LcdWriteData(num[date_process()%10]);
 		LcdWriteData(num[13]);
 	
-//	LcdWriteCom(0X01);ÇåÆÁ
+//	LcdWriteCom(0X01);æ¸…å±
 
 }
 
@@ -59,7 +59,7 @@ int matrix_button()
 {
 	unsigned int x,key;
 	x=0;
-	P1=0x7f;//µÚÒ»ĞĞÎª0
+	P1=0x7f;//ç¬¬ä¸€è¡Œä¸º0
 	if(P1!=0x7f)
 	{
 		delayms(5);
@@ -68,7 +68,7 @@ int matrix_button()
 			key=P1&0x0f;
 			switch(key)
 			{
-				case 0x07: mode_flag=1;break;LcdWriteCom(0X01);//S1
+				case 0x07: mode_flag=1;LcdWriteCom(0X01);break;//S1
 				case 0x0b: x=2;break;//S2
 				case 0x0d: x=3;break;//S3
 				case 0x0e: x=4;break;//S4
@@ -76,7 +76,7 @@ int matrix_button()
 		}
 	}
 	
-	P1=0xbf;//µÚ¶şĞĞÎª0
+	P1=0xbf;//ç¬¬äºŒè¡Œä¸º0
 	if(P1!=0xbf)
 	{
 		delayms(5);
@@ -93,7 +93,7 @@ int matrix_button()
 		}
 	}
 	
-	P1=0xdf;//µÚÈıĞĞÎª0
+	P1=0xdf;//ç¬¬ä¸‰è¡Œä¸º0
 	if(P1!=0xdf)
 	{
 		delayms(5);
@@ -110,7 +110,7 @@ int matrix_button()
 		}
 	}
 	
-//	P1=0xef;//µÚËÄĞĞÎª0
+//	P1=0xef;//ç¬¬å››è¡Œä¸º0
 //	if(P1!=0xef)
 //	{
 //		delayms(5);
@@ -140,7 +140,7 @@ void delayms(unsigned int ms)
 void buzzer()
 {
 	unsigned int i;
-	P1=(P1&0xdf)|0x00;//	P1^5,·äÃùÆ÷
+	P1=(P1&0xdf)|0x00;//	P1^5,èœ‚é¸£å™¨
 	for(i=2;i>0;i--);
 	P1=(P1&0xdf)|0x20;
 	for(i=2;i>0;i--);
@@ -148,11 +148,11 @@ void buzzer()
 
 void t01()
 {
-	TMOD&=0xFF;		//ÉèÖÃ¶¨Ê±Æ÷Ä£Ê½
-	TL0=(65536-2000)/256;		//ÉèÖÃ¶¨Ê±³õÖµ  2ms
-	TH0=(65536-2000)%256;		//ÉèÖÃ¶¨Ê±³õÖµ
-	TL1=(65536-50000)/256;		//ÉèÖÃ¶¨Ê±³õÖµ  50ms
-	TH1=(65536-50000)%256;		//ÉèÖÃ¶¨Ê±³õÖµ
+	TMOD&=0xFF;		//è®¾ç½®å®šæ—¶å™¨æ¨¡å¼
+	TL0=(65536-2000)/256;		//è®¾ç½®å®šæ—¶åˆå€¼  2ms
+	TH0=(65536-2000)%256;		//è®¾ç½®å®šæ—¶åˆå€¼
+	TL1=(65536-50000)/256;		//è®¾ç½®å®šæ—¶åˆå€¼  50ms
+	TH1=(65536-50000)%256;		//è®¾ç½®å®šæ—¶åˆå€¼
 	EA=1;
 	ET0=1;
 	ET1=0;
@@ -163,8 +163,8 @@ void t01()
 void t0_() interrupt 1
 {
 	unsigned int count;
-	TL0=(65536-2000)/256;		//ÉèÖÃ¶¨Ê±³õÖµ  2ms
-	TH0=(65536-2000)%256;		//ÉèÖÃ¶¨Ê±³õÖµ
+	TL0=(65536-2000)/256;		//è®¾ç½®å®šæ—¶åˆå€¼  2ms
+	TH0=(65536-2000)%256;		//è®¾ç½®å®šæ—¶åˆå€¼
 	count++;
 	
 	if(m==2)
@@ -172,19 +172,19 @@ void t0_() interrupt 1
 		buzzer();
 	}
 	
-	if(count==200)//´óÖÂ1s
+	if(count==200)//å¤§è‡´1s
 	{
 		count=0;
 		second++;
-		if(second==60)//´óÖÂ1m
+		if(second==60)//å¤§è‡´1m
 		{
 			second=0;
 			minute++;
-			if(minute==60)//´óÖÂ1h
+			if(minute==60)//å¤§è‡´1h
 			{
 				minute=0;
 				hour++;
-				if(hour==24)//´óÖÂ1d
+				if(hour==24)//å¤§è‡´1d
 				{
 					hour=0;
 				}
@@ -196,24 +196,24 @@ void t0_() interrupt 1
 void t1_() interrupt 3
 {
 	unsigned int count;
-	TL1=(65536-50000)/256;		//ÉèÖÃ¶¨Ê±³õÖµ  50ms
-	TH1=(65536-50000)%256;		//ÉèÖÃ¶¨Ê±³õÖµ
+	TL1=(65536-50000)/256;		//è®¾ç½®å®šæ—¶åˆå€¼  50ms
+	TH1=(65536-50000)%256;		//è®¾ç½®å®šæ—¶åˆå€¼
 	count++;
 	
-//	if(count==20)//´óÖÂ1s
-	if(count==400)//´óÖÂ1s
+//	if(count==20)//å¤§è‡´1s
+	if(count==400)//å¤§è‡´1s
 	{
 		count=0;
 		second2++;
-		if(second2==60)//´óÖÂ1m
+		if(second2==60)//å¤§è‡´1m
 		{
 			second2=0;
 			minute2++;
-			if(minute2==60)//´óÖÂ1h
+			if(minute2==60)//å¤§è‡´1h
 			{
 				minute2=0;
 				hour2++;
-				if(hour2==24)//´óÖÂ1d
+				if(hour2==24)//å¤§è‡´1d
 				{
 					hour2=0;
 				}
@@ -221,7 +221,7 @@ void t1_() interrupt 3
 		}
 	}
 }
-int date_process()//s¡¢m
+int date_process()//sã€m
 {
 	unsigned int t;
 	if(mode_flag==1||mode_flag==0)
@@ -263,7 +263,7 @@ int date_process_hour()//h
 	return j;
 }
 
-void mode()//Ä£Ê½
+void mode()//æ¨¡å¼
 {
 	unsigned int a;
 	if(mode_flag==1)
@@ -300,7 +300,7 @@ void mode()//Ä£Ê½
 		if(matrix_button()==4)
 		{
 			mode_flag=0;
-			LcdWriteCom(0X01);//ÇåÆÁ	
+			LcdWriteCom(0X01);//æ¸…å±	
 		}	
 		
 	}
@@ -331,7 +331,7 @@ void mode()//Ä£Ê½
 		if(matrix_button()==8)
 		{
 			mode_flag=0;
-			LcdWriteCom(0X01);//ÇåÆÁ	
+			LcdWriteCom(0X01);//æ¸…å±	
 		}
 	}
 	
@@ -364,7 +364,7 @@ void mode()//Ä£Ê½
 		{
 			m=1;
 			mode_flag=0;
-			LcdWriteCom(0X01);//ÇåÆÁ	
+			LcdWriteCom(0X01);//æ¸…å±	
 		}
 	}
 }
