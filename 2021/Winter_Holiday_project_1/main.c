@@ -85,7 +85,7 @@ int matrix_button()
 			key=P1&0x0f;
 			switch(key)
 			{
-				case 0x07: mode_flag=2;	LcdWriteCom(0X01);break;//S5
+				case 0x07: mode_flag=2;LcdWriteCom(0X01);break;//S5
 				case 0x0b: x=6;break;//S6
 				case 0x0d: x=7;break;//S7
 				case 0x0e: x=8;m=0;break;//S8
